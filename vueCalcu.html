@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+    <div id="app">
+
+
+        <div class="flex justify-center items-center h-screen">
+            <div class="bg-rose-100 border-1 border-rose-500 p-6 rounded-2xl shadow-lg w-80">
+                <input v-model="display"
+                    class="bg-rose-300 px-10 py-4 w-full rounded-lg mb-2 text-white text-2xl text-right border border-gray-100 shadow-xl"
+                    type="text">
+
+
+                <div class="grid grid-cols-4 gap-2">
+                    <button @click="cleardisplay()"
+                        class="bg-rose-200  hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-700 cursor-pointer">AC</button>
+                    <button @click=""
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-700 cursor-pointer">+/-</button>
+                    <button @click=""
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-700 cursor-pointer">%</button>
+                    <button @click="setOperators('/')"
+                        class="bg-gray-400 hover:bg-orange-600 text-white p-4 rounded-lg font-semibold cursor-pointer">/</button>
+                    <button @click="press('7')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">7</button>
+                    <button @click="press('8')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">8</button>
+                    <button @click="press('9')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">9</button>
+                    <button @click="setOperators('*')"
+                        class="bg-gray-400 hover:bg-orange-600 text-white p-4 rounded-lg font-semibold cursor-pointer">×</button>
+                    <button @click="press('4')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">4</button>
+                    <button @click="press('5')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">5</button>
+                    <button @click="press('6')"
+                        class="bg-rose-200 hover:bg-redy-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">6</button>
+                    <button @click="setOperators('-')"
+                        class="bg-gray-400 hover:bg-orange-600 text-white p-4 rounded-lg font-semibold cursor-pointer">-</button>
+                    <button @click="press('1')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">1</button>
+                    <button @click="press('2')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">2</button>
+                    <button @click="press('3')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">3</button>
+                    <button @click="setOperators('+')"
+                        class="bg-gray-400 hover:bg-orange-600 text-white p-4 rounded-lg font-semibold cursor-pointer">+</button>
+                    <button @click="press('0')"
+                        class="col-span-2 bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">0</button>
+                    <button @click="press('.')"
+                        class="bg-rose-200 hover:bg-red-300 p-4 rounded-lg font-semibold text-gray-800 cursor-pointer">.</button>
+                    <button @click="showequal()"
+                        class="bg-gray-400 hover:bg-orange-600 text-white p-4 rounded-lg font-semibold cursor-pointer">=</button>
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    display: "",
+                    currentInput: "",
+
+                    Operators: "",
+                    firstNum: 0,
+                    secondNum: 0,
+                    success: "",
+                }
+
+            },
+            methods: {
+                press(value) {
+                    this.currentInput += value;
+
+                    this.display = this.currentInput;
+
+                },
+                cleardisplay() {
+                    this.currentInput = "";
+                    this.display = "";
+                    this.secondNum = 0;
+                    this.firstNum = 0;
+                    this.Operators = "";
+
+
+                },
+                setOperators(op) {
+                    if (this.Operators === "" && this.currentInput !== "") {
+                        this.firstNum = parseFloat(this.currentInput)
+                    } else {
+                        this.showequal();
+                    }
+
+                    this.Operators = op;
+                    this.currentInput = "";
+                    this.display = this.firstNum;
+                },
+                showequal() {
+                    this.secondNum = parseFloat(this.currentInput);
+
+                    if (this.Operators === "/" && this.secondNum === 0) {
+                        this.display = "Error"
+                        return true;
+                    }
+                    if (this.secondNum) {
+                        switch (this.Operators) {
+                            case "+":
+                                this.firstNum += this.secondNum;
+                                break;
+                            case "-":
+                                this.firstNum -= this.secondNum;
+                                break;
+                            case "*":
+                                this.firstNum *= this.secondNum;
+                                break;
+                            case "/":
+                                this.firstNum /= this.secondNum;
+
+                                break;
+
+
+                            default: this.firstNum = this.secondNum;
+                        }
+                        this.currentInput = "";
+                        this.display = this.firstNum;
+                        return true;
+
+                    }
+
+
+                },
+                clickCal() {
+                    this.success = this.showequal();
+                    if (!this.success) {
+                        return;
+                    }
+                    this.Operators = "";
+                }
+
+
+
+            }
+
+        }).mount('#app');
+    </script>
+</body>
+
+</html>
